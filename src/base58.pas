@@ -53,9 +53,9 @@ BEGIN
 		res := Copy(B58_ALPHABET, i + 1, 1) + res;
 		mpz_fdiv_q(num, num, divisor);
         END;
-	FOR i := 0 TO 32 DO
+	FOR i := 0 TO 31 DO
 	BEGIN
-		IF data[i] = chr(0)
+		IF data[i] = #0
 		THEN res := Copy(B58_ALPHABET, 0, 1) + res
 		ELSE BREAK;
 	END;

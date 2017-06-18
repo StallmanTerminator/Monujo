@@ -62,13 +62,13 @@ IMPLEMENTATION
         FUNCTION TWallet.Load(path: string): Boolean;
         VAR
                 fp: file of char;
-                data: array[1..32] of char;
+                data: array[0..31] of char;
                 i: integer;
         BEGIN
                 AssignFile(fp, path);
                 reset(fp);
                 blockread(fp, data, 32);
-                FOR i := 0 TO 32 DO
+                FOR i := 0 TO 31 DO
                         _seed[i] := data[i];
                 CloseFile(fp);
                 LoadFromSeed;
@@ -84,12 +84,12 @@ IMPLEMENTATION
         FUNCTION TWallet.Save(path: string): Boolean;
 	VAR
 		fp: file of char;
-		data: array[1..32] of char;
+		data: array[0..31] of char;
 		i: integer;
         BEGIN
 		AssignFile(fp, path);
 		rewrite(fp);
-		FOR i := 0 TO 32 DO
+		FOR i := 0 TO 31 DO
 			data[i] := _seed[i];
 		blockwrite(fp, data, 32);
 		CloseFile(fp);

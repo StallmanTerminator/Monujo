@@ -12,6 +12,9 @@ UNIT crypto;
 INTERFACE
 
 USES
+	{$IF DEFINED(WINDOWS)}
+	jwawincrypt,
+	{$ENDIF}
         sysutils;
 
 PROCEDURE GenerateSeed(seed: pchar);
@@ -22,18 +25,23 @@ PROCEDURE GenerateSeed(seed: pchar);
 {$IF DEFINED(UNIX)}
 VAR
         fp: file of char;
-        data: array[1..32] of char;
+        data: array[0..31] of char;
         i: integer;
 BEGIN
         (* https://www.2uo.de/myths-about-urandom/ *)
         AssignFile(fp, '/dev/urandom');
         reset(fp);
         blockread(fp, data, 32);
-        FOR i := 0 TO 32 DO
+        FOR i := 0 TO 31 DO
                 seed[i] := data[i];
         CloseFile(fp);
 {$ELSEIF DEFINED(WINDOWS)}
-	(* TODO *)
+VAR
+	provider: HCRYPTPROV;
+BEGIN
+	CryptAcquireContext(provider, NIL, NIL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT);
+	CryptGenRandom(provider, 32, @seed[0]);
+	CryptReleaseContext(provider, 0);
 {$ENDIF}
 END;
 
