@@ -18,6 +18,7 @@ TYPE
         TTestChecksum = CLASS(TTestCase)
         PUBLISHED
 		PROCEDURE TestCalculateChecksum;
+		PROCEDURE TestCheckAddressChecksum;
         END;
 
 IMPLEMENTATION
@@ -37,6 +38,11 @@ BEGIN
 		pubkey[i] := char(raw[i]);
         AssertEquals('KAv', CalculateChecksum(pubkey));
 	StrDispose(pubkey);
+END;
+
+PROCEDURE TTestChecksum.TestCheckAddressChecksum;
+BEGIN
+	AssertTrue(CheckAddressChecksum('J4c8CARmP9vAFNGtHRuzx14zvxojyRWHW2darguVqjtX', 'KAv'));
 END;
 
 END.

@@ -41,8 +41,14 @@ BEGIN
 END;
 
 FUNCTION CheckAddressChecksum(address: string; chk: string): boolean;
+VAR
+	raw: pchar;
 BEGIN
-        result := False;
+	result := False;
+	raw := Base58Decode(address);
+	IF CalculateChecksum(raw) = chk THEN
+		result := True;
+	StrDispose(raw);
 END;
 
 END.

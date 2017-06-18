@@ -10,7 +10,7 @@ PROGRAM TestMonujo;
 {$mode objfpc}{$H+}
 
 USES
-        fpcunit, testregistry, testutils, testreport, TestBase58, TestChecksum;
+        fpcunit, testregistry, testutils, testreport, TestBase58, TestChecksum, TestWallet;
 
 FUNCTION RunTest(ATest: TTest): Boolean;
 VAR
@@ -35,8 +35,10 @@ BEGIN
 	(* register test *)
         RegisterTest(TTestBase58);
 	RegisterTest(TTestChecksum);
+	RegisterTest(TTestWallet);
 
 	(* run *)
+	ExitCode := 0;
 	IF NOT RunTest(GetTestRegistry) THEN
 		ExitCode := 1;
 END.

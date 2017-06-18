@@ -14,7 +14,8 @@ INTERFACE
 USES
         fphttpclient,
         fpjson,
-        jsonparser;
+        jsonparser,
+	math;
 
 TYPE
         TNode = CLASS
@@ -28,6 +29,8 @@ TYPE
                 CONSTRUCTOR Create(url: string);
 
                 PROPERTY Currency: string read _currency;
+
+		FUNCTION GetAmountFromAddress(address: string): int64;
         END;
 
 IMPLEMENTATION
@@ -60,4 +63,26 @@ IMPLEMENTATION
                 json := GetJSON(data);
                 result := json.FindPath('currency').AsString;
         END;
+
+	FUNCTION TNode.GetAmountFromAddress(address: string): int64;
+	VAR
+		data: string;
+		json: TJSONData;
+		sources: TJSONArray;
+		item: TJSONEnum;
+		base: int64;
+		amount: int64;
+	BEGIN
+		result := 0;
+		data := Get('/tx/sources/' + address);
+
+		json := GetJSON(data);
+		sources := TJSONArray(json.FindPath('sources'));
+		FOR item IN sources DO
+		BEGIN
+			base := item.Value.FindPath('base').AsInt64;
+			amount := item.Value.FindPath('amount').AsInt64;
+			result := result + (amount * 10 ** base);
+		END;
+	END;
 END.
