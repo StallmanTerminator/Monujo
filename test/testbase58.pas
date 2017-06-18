@@ -19,6 +19,8 @@ TYPE
         PUBLISHED
                 PROCEDURE TestEncode;
 		PROCEDURE TestEncodeNullByte;
+		PROCEDURE TestDecode;
+		PROCEDURE TestDecodeNullByteResult;
         END;
 
 IMPLEMENTATION
@@ -37,10 +39,34 @@ VAR
 	i: integer;
 BEGIN
 	data := StrAlloc(32);
-	FOR i := 0 TO 32 DO
+	FOR i := 0 TO 31 DO
 		data[i] := #0;
 	AssertEquals('11111111111111111111111111111111', Base58Encode(data));
 	StrDispose(data);
+END;
+
+PROCEDURE TTestBase58.TestDecode;
+VAR
+	decoded: pchar;
+BEGIN
+	decoded := Base58Decode('4F7BsTMVPKFshM1MwLf6y23cid6fL3xMpazVoF9krzUw');
+	AssertEquals(0, strlcomp('00000000000000000000000000000000', decoded, 32));
+	StrDispose(decoded);
+END;
+
+PROCEDURE TTestBase58.TestDecodeNullByteResult;
+VAR
+	decoded: pchar;
+	expected: pchar;
+	i: integer;
+BEGIN
+	expected := StrAlloc(32);
+	FOR i := 0 TO 31 DO
+		expected[i] := #0;
+	decoded := Base58Decode('11111111111111111111111111111111');
+	AssertEquals(0, strlcomp(expected, decoded, 32));
+	StrDispose(expected);
+	StrDispose(decoded);
 END;
 
 END.
