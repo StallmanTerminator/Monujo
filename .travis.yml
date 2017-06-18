@@ -6,6 +6,7 @@ addons:
   apt:
     sources:
       - sourceline: 'ppa:chris-lea/libsodium'
+      - sourceline: 'ppa:ok2cqr/lazarus'
     packages:
       - fpc
       - fpc-source
