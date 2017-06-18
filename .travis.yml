@@ -1,0 +1,16 @@
+dist: trusty
+language: c
+os:
+  - linux
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:chris-lea/libsodium'
+    packages:
+      - fpc
+      - fpc-source
+      - libgmp-dev
+      - libsodium-dev
+
+script:
+  - make test
